@@ -1,48 +1,64 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Elementos do DOM
+    // 1. PRELOADER - Desaparece após 2.5 segundos
+    const preloader = document.getElementById('preloader');
+    setTimeout(() => {
+        preloader.style.opacity = '0';
+        preloader.style.visibility = 'hidden';
+        preloader.style.transition = 'opacity 0.5s ease';
+    }, 2500);
+
+    // 2. MENU HAMBÚRGUER (MOBILE)
     const hamburger = document.querySelector('.hamburger');
     const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-menu a');
-    const skillBars = document.querySelectorAll('.skill-progress');
-    const header = document.querySelector('.header');
 
-    // 1. Toggle do menu hambúrguer (mobile)
     hamburger.addEventListener('click', () => {
         navMenu.classList.toggle('active');
     });
 
-    // 2. Fecha o menu ao clicar em um link (melhora UX mobile)
-    navLinks.forEach(link => {
+    // Fecha o menu ao clicar em um link
+    document.querySelectorAll('.nav-menu a').forEach(link => {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
         });
     });
 
-    // 3. Animação das barras de habilidades quando entram na viewport
-    // Intersection Observer é vanilla JS moderno, aceito em vagas JR
-    const observerOptions = {
-        threshold: 0.5 // Dispara quando 50% do elemento está visível
-    };
+    // 3. CAROUSEL DE ESTATÍSTICAS (LOOP INFINITO)
+    const statsTrack = document.querySelector('.carousel-track');
+    if (statsTrack) {
+        // Duplica o conteúdo para criar loop infinito
+        const statsItems = statsTrack.innerHTML;
+        statsTrack.innerHTML = statsItems + statsItems;
+    }
 
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                const skillBar = entry.target;
-                const width = skillBar.getAttribute('data-width');
-                skillBar.style.width = `${width}%`;
-                observer.unobserve(skillBar); // Anima apenas uma vez
+    // 4. CAROUSEL DE FOTOS (SOBRE MIM)
+    const photoCarousel = document.querySelector('.photo-carousel');
+    if (photoCarousel) {
+        // Duplica o conteúdo para criar loop infinito
+        const photos = photoCarousel.innerHTML;
+        photoCarousel.innerHTML = photos + photos;
+    }
+
+    // 5. SCROLL SUAVE PARA LINKS INTERNOS
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
             }
         });
-    }, observerOptions);
+    });
 
-    skillBars.forEach(bar => observer.observe(bar));
-
-    // 4. Header com fundo mais opaco ao rolar (efeito comum em portfólios modernos)
+    // 6. HEADER COM FUNDO MAIS OPACO AO ROLAR
+    const header = document.querySelector('.header');
     window.addEventListener('scroll', () => {
         if (window.scrollY > 50) {
-            header.style.backgroundColor = 'rgba(10, 25, 47, 1)';
+            header.style.backgroundColor = 'rgba(11, 13, 13, 1)';
         } else {
-            header.style.backgroundColor = 'rgba(10, 25, 47, 0.95)';
+            header.style.backgroundColor = 'rgba(11, 13, 13, 0.95)';
         }
     });
 });
